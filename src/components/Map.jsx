@@ -2,7 +2,7 @@ import { MapContainer, TileLayer, CircleMarker, Circle, Popup } from 'react-leaf
 import MapLegend from './MapLegend';
 import 'leaflet/dist/leaflet.css';
 
-function Map({ balloons, populatedPlaces }) {
+function Map({ balloons, populatedPlaces, selectedHour }) {
   const center = [0, 0];
   const zoom = 2;
 
@@ -13,8 +13,8 @@ function Map({ balloons, populatedPlaces }) {
     return lon;
   };
 
-  // Create wrapped versions of balloons (showing only current positions - hour 0)
-  const currentBalloons = balloons.filter(b => b.hoursAgo === 0);
+  // Filter balloons to show only the selected hour
+  const currentBalloons = balloons.filter(b => b.hoursAgo === selectedHour);
   const wrappedBalloons = [];
   currentBalloons.forEach((balloon) => {
     const normalizedLon = normalizeLon(balloon.lon);

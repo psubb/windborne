@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { fetchAllBalloonData } from './utils/balloonData';
 import { fetchPopulatedPlaces, calculatePopulationCoverage } from './utils/populationData';
 import Map from './components/Map';
+import TimeSlider from './components/TimeSlider';
 import './App.css';
 
 function App() {
@@ -10,6 +11,7 @@ function App() {
   const [analytics, setAnalytics] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [selectedHour, setSelectedHour] = useState(0); // New state for time slider
 
   // Fetch data when component loads
   useEffect(() => {
@@ -25,14 +27,6 @@ function App() {
         
         setBalloons(balloonData);
         setPopulatedPlaces(populationData);
-        
-        // Calculate analytics
-        const stats = calculatePopulationCoverage(
-          balloonData.filter(b => b.hoursAgo === 0), // Only current balloons
-          populationData
-        );
-        setAnalytics(stats);
-        
         setLoading(false);
         console.log('✓ All data loaded successfully!');
       } catch (err) {
@@ -43,6 +37,15 @@ function App() {
     
     loadData();
   }, []);
+
+  // Recalculate analytics whenever selected hour changes
+  useEffect(() => {
+    if (balloons.length === 0 || populatedPlaces.length === 0) return;
+
+    const balloonsAtSelectedHour = balloons.filter(b => b.hoursAgo === selectedHour);
+    const stats = calculatePopulationCoverage(balloonsAtSelectedHour, populatedPlaces);
+    setAnalytics(stats);
+  }, [selectedHour, balloons, populatedPlaces]);
 
   // Show loading state
   if (loading) {
@@ -67,7 +70,6 @@ function App() {
     );
   }
 
-  // Show the app!
   return (
     <div className="App">
       <header style={{ 
@@ -128,8 +130,8 @@ function App() {
           backgroundColor: '#f4f4f4'
         }}>
           <div style={statCardStyle}>
-            <div style={statNumberStyle}>{balloons.length.toLocaleString()}</div>
-            <div style={statLabelStyle}>Total Balloon Positions (24h)</div>
+            <div style={statNumberStyle}>{analytics.totalBalloons.toLocaleString()}</div>
+            <div style={statLabelStyle}>Balloons at This Time</div>
           </div>
           
           <div style={statCardStyle}>
@@ -154,8 +156,19 @@ function App() {
         </div>
       )}
 
+      {/* Time Slider */}
+      <TimeSlider 
+        currentHour={selectedHour}
+        onHourChange={setSelectedHour}
+        totalHours={24}
+      />
+
       <main>
-        <Map balloons={balloons} populatedPlaces={populatedPlaces} />
+        <Map 
+          balloons={balloons} 
+          populatedPlaces={populatedPlaces}
+          selectedHour={selectedHour}
+        />
       </main>
 
       <footer style={{ 
@@ -187,7 +200,7 @@ function App() {
             </a>
           </p>
           <p style={{ margin: '5px 0', fontSize: '12px' }}>
-            Showing current positions (Hour 0) with 500km coverage radius
+            Showing positions with 500km coverage radius • Use time slider to explore 24-hour history
           </p>
         </div>
       </footer>
