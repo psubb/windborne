@@ -1,3 +1,5 @@
+// This file handles population-related calculations
+
 /**
  * Fetches populated places data from Natural Earth (via GitHub)
  * @returns {Promise<Array>} Array of populated places
@@ -25,6 +27,7 @@ export async function fetchPopulatedPlaces() {
     }));
     
     console.log(`✓ Loaded ${places.length} populated places`);
+    console.log('Sample place:', places[0]); // Debug log
     
     return places;
   } catch (error) {
@@ -64,16 +67,27 @@ function calculateDistance(lat1, lon1, lat2, lon2) {
  * @returns {Object} Analytics data
  */
 export function calculatePopulationCoverage(balloons, populatedPlaces) {
+  console.log('Calculating coverage...');
+  console.log('Balloons:', balloons.length);
+  console.log('Places:', populatedPlaces.length);
+  
+  if (balloons.length === 0 || populatedPlaces.length === 0) {
+    return {
+      totalBalloons: balloons.length,
+      balloonsOverPopulated: 0,
+      percentageOverPopulated: 0,
+      citiesCovered: 0,
+      estimatedPopulationCovered: 0
+    };
+  }
+  
   const COVERAGE_RADIUS = 500; // km - balloons can sense within 500km radius
   
-  let balloonsOverPopulated = 0;
-  let totalPopulationCovered = 0;
-  const coveredCities = new Set();
+  const balloonsWithCoverage = new Set();
+  const coveredCities = new Map(); // Use Map to avoid duplicate population counting
   
-  balloons.forEach(balloon => {
-    let isOverPopulated = false;
-    
-    populatedPlaces.forEach(place => {
+  balloons.forEach((balloon, balloonIndex) => {
+    populatedPlaces.forEach((place) => {
       const distance = calculateDistance(
         balloon.lat,
         balloon.lon,
@@ -82,21 +96,38 @@ export function calculatePopulationCoverage(balloons, populatedPlaces) {
       );
       
       if (distance <= COVERAGE_RADIUS) {
-        isOverPopulated = true;
-        coveredCities.add(place.name);
-        totalPopulationCovered += place.pop_max;
+        balloonsWithCoverage.add(balloonIndex);
+        
+        // Only count each city once
+        if (!coveredCities.has(place.name)) {
+          coveredCities.set(place.name, place.pop_max);
+        }
       }
     });
-    
-    if (isOverPopulated) {
-      balloonsOverPopulated++;
-    }
+  });
+  
+  // Calculate total population covered
+  let totalPopulationCovered = 0;
+  coveredCities.forEach(pop => {
+    totalPopulationCovered += pop;
+  });
+  
+  const balloonsOverPopulated = balloonsWithCoverage.size;
+  const percentageOverPopulated = balloons.length > 0 
+    ? ((balloonsOverPopulated / balloons.length) * 100).toFixed(1)
+    : 0;
+  
+  console.log('Results:', {
+    balloonsOverPopulated,
+    percentageOverPopulated,
+    citiesCovered: coveredCities.size,
+    estimatedPopulationCovered: Math.round(totalPopulationCovered / 1000000)
   });
   
   return {
     totalBalloons: balloons.length,
     balloonsOverPopulated,
-    percentageOverPopulated: ((balloonsOverPopulated / balloons.length) * 100).toFixed(1),
+    percentageOverPopulated,
     citiesCovered: coveredCities.size,
     estimatedPopulationCovered: Math.round(totalPopulationCovered / 1000000) // in millions
   };
