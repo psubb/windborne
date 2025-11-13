@@ -48,7 +48,7 @@ function App() {
   if (loading) {
     return (
       <div style={{ padding: '20px', textAlign: 'center' }}>
-        <h1>🎈 Windborne Balloon Explorer</h1>
+        <h1>🎈 Windborne Population Coverage Dashboard</h1>
         <p>Loading balloon and population data...</p>
         <p style={{ fontSize: '14px', color: '#666' }}>
           This may take a few seconds...
@@ -71,15 +71,51 @@ function App() {
   return (
     <div className="App">
       <header style={{ 
-        padding: '20px', 
+        padding: '25px 20px', 
         backgroundColor: '#1a1a1a', 
         color: 'white',
         textAlign: 'center'
       }}>
-        <h1>🎈 Windborne Balloon Explorer</h1>
-        <p style={{ margin: '10px 0', fontSize: '16px' }}>
-          Global Atmospheric Data Collection Network
+        <h1 style={{ marginBottom: '8px' }}>🎈 Windborne Population Coverage Dashboard</h1>
+        <p style={{ margin: '8px 0', fontSize: '16px', color: '#ccc' }}>
+          Visualizing Global Atmospheric Monitoring and Population Impact
         </p>
+        <div style={{ marginTop: '18px' }}>
+          <p style={{ margin: '8px 0', fontSize: '20px', fontWeight: 'bold' }}>
+            Created by Pranav Subbiah
+          </p>
+          <div style={{ marginTop: '10px' }}>
+            <a 
+              href="https://linkedin.com/in/psubb" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              style={{ 
+                color: '#646cff', 
+                margin: '0 12px',
+                textDecoration: 'none',
+                fontSize: '17px',
+                fontWeight: '500'
+              }}
+            >
+              LinkedIn
+            </a>
+            <span style={{ color: '#666', fontSize: '17px' }}>|</span>
+            <a 
+              href="https://github.com/psubb" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              style={{ 
+                color: '#646cff', 
+                margin: '0 12px',
+                textDecoration: 'none',
+                fontSize: '17px',
+                fontWeight: '500'
+              }}
+            >
+              GitHub
+            </a>
+          </div>
+        </div>
       </header>
 
       {/* Analytics Dashboard */}
@@ -123,21 +159,37 @@ function App() {
       </main>
 
       <footer style={{ 
-        padding: '20px', 
+        padding: '25px 20px', 
         textAlign: 'center',
         backgroundColor: '#1a1a1a',
-        color: 'white'
+        color: 'white',
+        borderTop: '2px solid #333'
       }}>
-        <p style={{ margin: '5px 0', fontSize: '14px' }}>
-          Data from <a href="https://windbornesystems.com" target="_blank" rel="noopener noreferrer" style={{ color: '#646cff' }}>
-            Windborne Systems
-          </a> • Population data from <a href="https://www.naturalearthdata.com/" target="_blank" rel="noopener noreferrer" style={{ color: '#646cff' }}>
-            Natural Earth
-          </a>
+        <p style={{ margin: '12px 0', fontSize: '14px', color: '#ccc', lineHeight: '1.6' }}>
+          This interactive dashboard combines live weather balloon tracking data with global population 
+          centers to analyze atmospheric data collection coverage. The visualization demonstrates how 
+          Windborne's balloon network provides critical atmospheric insights over populated regions, 
+          supporting weather forecasting, climate research, and disaster preparedness for millions of people worldwide.
         </p>
-        <p style={{ margin: '5px 0', fontSize: '12px', color: '#999' }}>
-          Showing current positions (Hour 0) with 500km coverage radius
-        </p>
+        
+        <div style={{ 
+          paddingTop: '15px', 
+          marginTop: '15px',
+          borderTop: '1px solid #333',
+          fontSize: '13px',
+          color: '#999'
+        }}>
+          <p style={{ margin: '5px 0' }}>
+            Data Sources: <a href="https://windbornesystems.com" target="_blank" rel="noopener noreferrer" style={{ color: '#646cff' }}>
+              Windborne Systems
+            </a> • <a href="https://www.naturalearthdata.com/" target="_blank" rel="noopener noreferrer" style={{ color: '#646cff' }}>
+              Natural Earth
+            </a>
+          </p>
+          <p style={{ margin: '5px 0', fontSize: '12px' }}>
+            Showing current positions (Hour 0) with 500km coverage radius
+          </p>
+        </div>
       </footer>
     </div>
   );
