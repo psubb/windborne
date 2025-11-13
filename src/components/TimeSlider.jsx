@@ -15,7 +15,7 @@ function TimeSlider({ currentHour, onHourChange, totalHours = 24 }) {
         }
         return prev + 1;
       });
-    }, 800); // Change every 800ms (0.8 seconds)
+    }, 1000); // Changed from 800ms to 1000ms (1 second) for smoother feel
 
     return () => clearInterval(interval);
   }, [isPlaying, onHourChange, totalHours]);
@@ -43,7 +43,8 @@ function TimeSlider({ currentHour, onHourChange, totalHours = 24 }) {
       <div style={{ 
         fontSize: '18px', 
         fontWeight: 'bold',
-        color: '#ff4444'
+        color: '#ff4444',
+        minHeight: '27px' // Prevents layout shift
       }}>
         {getTimeLabel()}
       </div>
@@ -67,29 +68,77 @@ function TimeSlider({ currentHour, onHourChange, totalHours = 24 }) {
             borderRadius: '5px',
             cursor: 'pointer',
             fontWeight: 'bold',
-            minWidth: '80px'
+            minWidth: '80px',
+            transition: 'all 0.3s ease'
+          }}
+          onMouseEnter={(e) => {
+            e.target.style.transform = 'scale(1.05)';
+            e.target.style.opacity = '0.9';
+          }}
+          onMouseLeave={(e) => {
+            e.target.style.transform = 'scale(1)';
+            e.target.style.opacity = '1';
           }}
         >
           {isPlaying ? '⏸ Pause' : '▶ Play'}
         </button>
 
         {/* Slider */}
-        <input
-          type="range"
-          min="0"
-          max={totalHours - 1}
-          value={currentHour}
-          onChange={(e) => {
-            setIsPlaying(false); // Stop auto-play when manually sliding
-            onHourChange(Number(e.target.value));
-          }}
-          style={{
-            flex: 1,
-            height: '8px',
-            cursor: 'pointer',
-            accentColor: '#ff4444'
-          }}
-        />
+        <div style={{ flex: 1, position: 'relative' }}>
+          <input
+            type="range"
+            min="0"
+            max={totalHours - 1}
+            value={currentHour}
+            onChange={(e) => {
+              setIsPlaying(false); // Stop auto-play when manually sliding
+              onHourChange(Number(e.target.value));
+            }}
+            style={{
+              width: '100%',
+              height: '8px',
+              cursor: 'pointer',
+              appearance: 'none',
+              WebkitAppearance: 'none',
+              background: `linear-gradient(to right, #ff4444 0%, #ff4444 ${(currentHour / (totalHours - 1)) * 100}%, #555 ${(currentHour / (totalHours - 1)) * 100}%, #555 100%)`,
+              borderRadius: '5px',
+              outline: 'none'
+            }}
+          />
+          <style>
+            {`
+              input[type="range"]::-webkit-slider-thumb {
+                appearance: none;
+                width: 20px;
+                height: 20px;
+                border-radius: 50%;
+                background: #ff4444;
+                cursor: pointer;
+                border: 2px solid white;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+                transition: all 0.2s ease;
+              }
+              input[type="range"]::-webkit-slider-thumb:hover {
+                transform: scale(1.2);
+                box-shadow: 0 3px 6px rgba(0,0,0,0.4);
+              }
+              input[type="range"]::-moz-range-thumb {
+                width: 20px;
+                height: 20px;
+                border-radius: 50%;
+                background: #ff4444;
+                cursor: pointer;
+                border: 2px solid white;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+                transition: all 0.2s ease;
+              }
+              input[type="range"]::-moz-range-thumb:hover {
+                transform: scale(1.2);
+                box-shadow: 0 3px 6px rgba(0,0,0,0.4);
+              }
+            `}
+          </style>
+        </div>
 
         {/* Hour Labels */}
         <div style={{ 

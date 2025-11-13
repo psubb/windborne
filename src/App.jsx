@@ -178,12 +178,27 @@ function App() {
         color: 'white',
         borderTop: '2px solid #333'
       }}>
-        <p style={{ margin: '12px 0', fontSize: '14px', color: '#ccc', lineHeight: '1.6' }}>
+        <p style={{ margin: '12px 0 18px 0', fontSize: '14px', color: '#ccc', lineHeight: '1.6' }}>
           This interactive dashboard combines live weather balloon tracking data with global population 
           centers to analyze atmospheric data collection coverage. The visualization demonstrates how 
           Windborne's balloon network provides critical atmospheric insights over populated regions, 
           supporting weather forecasting, climate research, and disaster preparedness for millions of people worldwide.
         </p>
+
+        <div style={{
+          margin: '18px 0',
+          padding: '15px',
+          backgroundColor: '#252525',
+          borderRadius: '8px',
+          fontSize: '14px',
+          color: '#bbb',
+          lineHeight: '1.6'
+        }}>
+          <strong style={{ color: '#ff4444' }}>How to Use:</strong> Use the time slider to explore balloon positions 
+          over the past 24 hours. Click <strong style={{ color: '#4CAF50' }}>Play</strong> to animate through time, 
+          or drag the slider manually. Zoom and pan the map to explore different regions. Click on balloons 
+          or cities for detailed information.
+        </div>
         
         <div style={{ 
           paddingTop: '15px', 
@@ -200,7 +215,7 @@ function App() {
             </a>
           </p>
           <p style={{ margin: '5px 0', fontSize: '12px' }}>
-            Showing positions with 500km coverage radius • Use time slider to explore 24-hour history
+            500km coverage radius per balloon • Real-time data updates
           </p>
         </div>
       </footer>
